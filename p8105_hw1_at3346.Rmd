@@ -4,27 +4,40 @@ author: "Ashley Tseng"
 date: "9/12/2019"
 output: github_document
 ---
+library(tidyverse)
 
-```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
+prob1_df = tibble(
+  random_samp = rnorm(8),
+  random_samp_zero = random_samp > 0,
+  vec_char = c("red", "orange", "yellow", "green", "blue", "purple", "pink", "black"),
+  vec_fac = factor(c("high", "medium", "low", "high", "medium", "low", "high", "medium"))
+)
+
+mean(prob1_df[["random_samp"]])
+mean(prob1_df[["random_samp_zero"]])
+mean(prob1_df[["vec_char"]])
+mean(prob1_df[["vec_fac"]])
+
+# I am able to take the mean of "random_samp" and "random_samp_zero", but not of "vec_char" and "vec_fac" because the last two are non-numeric variables.
+
+```{r problem_1_conv}
+
+transform(prob1_df, random_samp_zero = as.numeric(random_samp_zero))
+transform(prob1_df, vec_char = as.numeric(vec_char))
+transform(prob1_df, vec_fac = as.numeric(vec_fac))
+
+# I am able to convert "random_samp_zero" and "vec_fac", but not "vec_char".
+
 ```
 
-## R Markdown
+```{r problem_1_mult}
 
-This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
+mult1 = as.numeric(prob1_df[["random_samp_zero"]])*(prob1_df[["random_samp"]])
 
-When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
+mult2 = factor(prob1_df[["random_samp_zero"]])*(prob1_df[["random_samp"]])
 
-```{r cars}
-summary(cars)
+conv1 = factor(prob1_df[["random_samp_zero"]])
+mult = as.numeric(conv1)*(prob1_df[["random_samp"]])
+
 ```
 
-## Including Plots
-
-You can also embed plots, for example:
-
-```{r pressure, echo=FALSE}
-plot(pressure)
-```
-
-Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
