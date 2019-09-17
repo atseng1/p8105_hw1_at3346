@@ -4,8 +4,16 @@ author: "Ashley Tseng"
 date: "9/12/2019"
 output: github_document
 ---
-library(tidyverse)
 
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+
+library(tidyverse)
+```
+
+## Problem 1
+
+```{r problem_1}
 prob1_df = tibble(
   random_samp = rnorm(8),
   random_samp_zero = random_samp > 0,
@@ -18,7 +26,8 @@ mean(prob1_df[["random_samp_zero"]])
 mean(prob1_df[["vec_char"]])
 mean(prob1_df[["vec_fac"]])
 
-# I am able to take the mean of "random_samp" and "random_samp_zero", but not of "vec_char" and "vec_fac" because the last two are non-numeric variables.
+# I am able to take the mean of "random_samp" and "random_samp_zero", but not of "vec_char" and "vec_fac" because the last two are non-numeric or non-logical variables.
+```
 
 ```{r problem_1_conv}
 
@@ -26,18 +35,55 @@ transform(prob1_df, random_samp_zero = as.numeric(random_samp_zero))
 transform(prob1_df, vec_char = as.numeric(vec_char))
 transform(prob1_df, vec_fac = as.numeric(vec_fac))
 
-# I am able to convert "random_samp_zero" and "vec_fac", but not "vec_char".
+# What happens, and why? Does this help explain what happens when you try to take the mean?
+# I am able to convert "random_samp_zero" and "vec_fac", but not "vec_char". 
 
 ```
 
 ```{r problem_1_mult}
-
+# Convert the logical vector to numeric, and multiply the random sample by the result:
 mult1 = as.numeric(prob1_df[["random_samp_zero"]])*(prob1_df[["random_samp"]])
 
+# Convert the logical vector to a factor, and multiply the random sample by the result:
 mult2 = factor(prob1_df[["random_samp_zero"]])*(prob1_df[["random_samp"]])
 
+# Convert the logical vector to a factor and then convert the result to numeric, and multiply the random sample by the result:
 conv1 = factor(prob1_df[["random_samp_zero"]])
 mult = as.numeric(conv1)*(prob1_df[["random_samp"]])
 
 ```
 
+## Problem 2
+
+```{r problem_2}
+prob2_df = tibble(
+  x = rnorm(500),
+  y = rnorm(500),
+  vec_log = x + y > 1,
+  vec_char = as.numeric(vec_log),
+  vec_fac = factor(vec_log)
+)
+
+nrow(prob2_df)
+ncol(prob2_df)
+
+mean_x = mean(pull(prob2_df, x)) 
+median_x = median(pull(prob2_df, x)) 
+sd_x = sd(pull(prob2_df, x)) 
+
+```
+
+The number of rows in the dataset is `nrow(prob2_df)`. The number of columns in the dataset is `ncol(prob2_df)`. 
+The mean of x is `r round(mean_x, digits = 2)`. The median of x is `r round(median_x, digits = 2)`. The standard deviation of x is `r round(sd_x, digits = 2)`.
+The proportion of cases for which x + y > 1 is `x + y > 1`.
+
+```{r problem_2_scatterplots}
+## Scatterplot of y vs x; color points using the logical variable 
+ggplot(prob2_df, aes(x = x, y = y, color = "vec_log")) + geom_point()
+
+## Scatterplot of y vs x; color points using the numeric variable 
+ggplot(prob2_df, aes(x = x, y = y, color = "vec_char)) + geom_point()
+
+## Scatterplot of y vs x; color points using the factor variable 
+ggplot(prob2_df, aes(x = x, y = y, color = "vec_fac")) + geom_point()
+```
