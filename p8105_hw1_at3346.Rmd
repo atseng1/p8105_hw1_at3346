@@ -82,7 +82,7 @@ The proportion of cases for which x + y > 1 is `x + y > 1`.
 ggplot(prob2_df, aes(x = x, y = y, color = "vec_log")) + geom_point()
 
 ## Scatterplot of y vs x; color points using the numeric variable 
-ggplot(prob2_df, aes(x = x, y = y, color = "vec_char)) + geom_point()
+ggplot(prob2_df, aes(x = x, y = y, color = "vec_char")) + geom_point()
 
 ## Scatterplot of y vs x; color points using the factor variable 
 ggplot(prob2_df, aes(x = x, y = y, color = "vec_fac")) + geom_point()
