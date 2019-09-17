@@ -1,19 +1,22 @@
 ---
 title: "p8105_hw1_at3346"
 author: "Ashley Tseng"
-date: "9/12/2019"
+date: "9/20/2019"
 output: github_document
 ---
 
 ```{r setup, include=FALSE}
+
 knitr::opts_chunk$set(echo = TRUE)
 
 library(tidyverse)
+
 ```
 
 ## Problem 1
 
 ```{r problem_1}
+
 prob1_df = tibble(
   random_samp = rnorm(8),
   random_samp_zero = random_samp > 0,
@@ -26,21 +29,23 @@ mean(prob1_df[["random_samp_zero"]])
 mean(prob1_df[["vec_char"]])
 mean(prob1_df[["vec_fac"]])
 
-# I am able to take the mean of "random_samp" and "random_samp_zero", but not of "vec_char" and "vec_fac" because the last two are non-numeric or non-logical variables.
 ```
 
-```{r problem_1_conv}
+I am able to take the mean of "random_samp" and "random_samp_zero", but not of "vec_char" and "vec_fac" because the last two are non-numeric variables.
 
+```{r problem_1_conv, eval = FALSE}
+
+# Applying the as.numeric function to the logical, character, and factor variables:
 transform(prob1_df, random_samp_zero = as.numeric(random_samp_zero))
-transform(prob1_df, vec_char = as.numeric(vec_char))
+transform(prob1_df, vec_char = as.numeric(vec_char)
 transform(prob1_df, vec_fac = as.numeric(vec_fac))
 
-# What happens, and why? Does this help explain what happens when you try to take the mean?
-# I am able to convert "random_samp_zero" and "vec_fac", but not "vec_char". 
-
 ```
 
+I am able to convert "random_samp_zero" and "vec_fac", but not "vec_char". The factor variable recognizes that my variable has three different levels, hence why I am able to convert "vec_fac" to a numeric variable. However, R was unable to take the mean of the factor variable when the levels were non-numeric. 
+
 ```{r problem_1_mult}
+
 # Convert the logical vector to numeric, and multiply the random sample by the result:
 mult1 = as.numeric(prob1_df[["random_samp_zero"]])*(prob1_df[["random_samp"]])
 
@@ -53,37 +58,51 @@ mult = as.numeric(conv1)*(prob1_df[["random_samp"]])
 
 ```
 
+
 ## Problem 2
 
 ```{r problem_2}
+
 prob2_df = tibble(
   x = rnorm(500),
   y = rnorm(500),
   vec_log = x + y > 1,
-  vec_char = as.numeric(vec_log),
+  vec_num = as.numeric(vec_log),
   vec_fac = factor(vec_log)
 )
 
-nrow(prob2_df)
-ncol(prob2_df)
+prob2_df_nrow = nrow(prob2_df)
+prob2_df_ncol = ncol(prob2_df)
 
 mean_x = mean(pull(prob2_df, x)) 
 median_x = median(pull(prob2_df, x)) 
 sd_x = sd(pull(prob2_df, x)) 
 
+vec_gr1 = mean(pull(prob2_df, vec_num))
+
 ```
 
-The number of rows in the dataset is `nrow(prob2_df)`. The number of columns in the dataset is `ncol(prob2_df)`. 
+The number of rows in the dataset is `r round(prob2_df_nrow, digits = 0)`. The number of columns in the dataset is `r round(prob2_df_ncol, digits = 0)`. 
 The mean of x is `r round(mean_x, digits = 2)`. The median of x is `r round(median_x, digits = 2)`. The standard deviation of x is `r round(sd_x, digits = 2)`.
-The proportion of cases for which x + y > 1 is `x + y > 1`.
+The proportion of cases for which x + y > 1 is `r round(vec_gr1, digits = 0)`.
 
-```{r problem_2_scatterplots}
-## Scatterplot of y vs x; color points using the logical variable 
-ggplot(prob2_df, aes(x = x, y = y, color = "vec_log")) + geom_point()
+```{r problem_2_scatterplots, eval = FALSE}
 
-## Scatterplot of y vs x; color points using the numeric variable 
-ggplot(prob2_df, aes(x = x, y = y, color = "vec_char")) + geom_point()
+# Scatterplot of y vs x; color points using the logical variable:
+plot1 = ggplot(prob2_df, aes(x = x, y = y, color = vec_log)) + geom_point()
 
-## Scatterplot of y vs x; color points using the factor variable 
-ggplot(prob2_df, aes(x = x, y = y, color = "vec_fac")) + geom_point()
+# Scatterplot of y vs x; color points using the numeric variable:
+plot2 = ggplot(prob2_df, aes(x = x, y = y, color = vec_num)) + geom_point()
+
+# Scatterplot of y vs x; color points using the factor variable:
+plot3 = ggplot(prob2_df, aes(x = x, y = y, color = vec_fac)) + geom_point()
+
+ggsave("plot1.pdf")
+
 ```
+
+On the scatterplot for the logical variable, points for which "vec_log" = TRUE are displayed in blue while points for which "vec_log" = FALSE are displayed in orange The variable is being displayed as a binary variable.
+
+On the scatterplot for the numeric variable, the legend is a gradient color scale, reflecting a continuous variable. If we look more closely, the points for which "vec_num" = 0 are displayed in dark blue while "vec_num" = 1 are displayed in light blue, indicating that there are only two different values being displayed (0 or 1).
+
+On the scatterplot for the factor variable, points for which "vec_fac" = TRUE are displayed in teal while "vec_fac" = FALSE are displayed in orange The variable is being displayed as a binary variable. The plot for "vec_fac" looks identical to the plot for "vec_log".
