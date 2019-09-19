@@ -6,16 +6,17 @@ output: github_document
 ---
 
 ```{r setup, include=FALSE}
-
 knitr::opts_chunk$set(echo = TRUE)
 
 library(tidyverse)
 
 ```
 
-## Problem 1
+# Problem 1
 
+## Creating dataframe and taking means of variables:
 ```{r problem_1}
+set.seed(7)
 
 prob1_df = tibble(
   random_samp = rnorm(8),
@@ -30,45 +31,40 @@ mean(prob1_df[["vec_char"]])
 mean(prob1_df[["vec_fac"]])
 
 ```
-
 I am able to take the mean of "random_samp" and "random_samp_zero", but not of "vec_char" and "vec_fac" because the last two are non-numeric variables.
 
+## Applying the "as.numeric" function to the logical, character, and factor variables:
 ```{r problem_1_conv, eval = FALSE}
-
-# Applying the as.numeric function to the logical, character, and factor variables:
 transform(prob1_df, random_samp_zero = as.numeric(random_samp_zero))
 transform(prob1_df, vec_char = as.numeric(vec_char)
 transform(prob1_df, vec_fac = as.numeric(vec_fac))
 
 ```
-
 I am able to convert "random_samp_zero" and "vec_fac", but not "vec_char". The factor variable recognizes that my variable has three different levels, hence why I am able to convert "vec_fac" to a numeric variable. However, R was unable to take the mean of the factor variable when the levels were non-numeric. 
 
+## Converting and multiplying vectors:
 ```{r problem_1_mult}
-
-# Convert the logical vector to numeric, and multiply the random sample by the result:
 mult1 = as.numeric(prob1_df[["random_samp_zero"]])*(prob1_df[["random_samp"]])
 
-# Convert the logical vector to a factor, and multiply the random sample by the result:
 mult2 = factor(prob1_df[["random_samp_zero"]])*(prob1_df[["random_samp"]])
 
-# Convert the logical vector to a factor and then convert the result to numeric, and multiply the random sample by the result:
 conv1 = factor(prob1_df[["random_samp_zero"]])
 mult = as.numeric(conv1)*(prob1_df[["random_samp"]])
 
 ```
 
 
-## Problem 2
+# Problem 2
 
 ```{r problem_2}
+set.seed(8)
 
 prob2_df = tibble(
   x = rnorm(500),
   y = rnorm(500),
   vec_log = x + y > 1,
   vec_num = as.numeric(vec_log),
-  vec_fac = factor(vec_log)
+  vec_fac = as.factor(vec_log)
 )
 
 prob2_df_nrow = nrow(prob2_df)
@@ -81,21 +77,18 @@ sd_x = sd(pull(prob2_df, x))
 vec_gr1 = mean(pull(prob2_df, vec_num))
 
 ```
+The number of rows in the dataset is `r round(prob2_df_nrow, digits = 0)`. The number of columns in the dataset is `r round(prob2_df_ncol, digits = 0)`. The mean of x is `r round(mean_x, digits = 2)`. The median of x is `r round(median_x, digits = 2)`. The standard deviation of x is `r round(sd_x, digits = 2)`. The proportion of cases for which x + y > 1 is `r round(vec_gr1, digits = 0)`.
 
-The number of rows in the dataset is `r round(prob2_df_nrow, digits = 0)`. The number of columns in the dataset is `r round(prob2_df_ncol, digits = 0)`. 
-The mean of x is `r round(mean_x, digits = 2)`. The median of x is `r round(median_x, digits = 2)`. The standard deviation of x is `r round(sd_x, digits = 2)`.
-The proportion of cases for which x + y > 1 is `r round(vec_gr1, digits = 0)`.
-
-```{r problem_2_scatterplots, eval = FALSE}
-
-# Scatterplot of y vs x; color points using the logical variable:
+## Scatterplots of the logical, numeric, and factor variables:
+```{r problem_2_scatterplots}
 plot1 = ggplot(prob2_df, aes(x = x, y = y, color = vec_log)) + geom_point()
+plot1
 
-# Scatterplot of y vs x; color points using the numeric variable:
 plot2 = ggplot(prob2_df, aes(x = x, y = y, color = vec_num)) + geom_point()
+plot2
 
-# Scatterplot of y vs x; color points using the factor variable:
 plot3 = ggplot(prob2_df, aes(x = x, y = y, color = vec_fac)) + geom_point()
+plot3
 
 ggsave("plot1.pdf")
 
