@@ -62,7 +62,7 @@ set.seed(8)
 prob2_df = tibble(
   x = rnorm(500),
   y = rnorm(500),
-  vec_log = x + y > 1,
+  vec_log = (x + y) > 1,
   vec_num = as.numeric(vec_log),
   vec_fac = as.factor(vec_log)
 )
@@ -77,7 +77,7 @@ sd_x = sd(pull(prob2_df, x))
 vec_gr1 = mean(pull(prob2_df, vec_num))
 
 ```
-The number of rows in the dataset is `r round(prob2_df_nrow, digits = 0)`. The number of columns in the dataset is `r round(prob2_df_ncol, digits = 0)`. The mean of x is `r round(mean_x, digits = 2)`. The median of x is `r round(median_x, digits = 2)`. The standard deviation of x is `r round(sd_x, digits = 2)`. The proportion of cases for which x + y > 1 is `r round(vec_gr1, digits = 0)`.
+The number of rows in the dataset is `r round(prob2_df_nrow, digits = 0)`. The number of columns in the dataset is `r round(prob2_df_ncol, digits = 0)`. The mean of x is `r round(mean_x, digits = 2)`. The median of x is `r round(median_x, digits = 2)`. The standard deviation of x is `r round(sd_x, digits = 2)`. The proportion of cases for which x + y > 1 is `r round(vec_gr1, digits = 2)`.
 
 ## Scatterplots of the logical, numeric, and factor variables:
 ```{r problem_2_scatterplots}
