@@ -31,7 +31,7 @@ mean(prob1_df[["vec_char"]])
 mean(prob1_df[["vec_fac"]])
 
 ```
-I am able to take the mean of "random_samp" and "random_samp_zero", but not of "vec_char" and "vec_fac" because the last two are non-numeric variables.
+I receive a warning message for both the character and factor variables. R returns "NA" for both of these variables when I try to take the mean. I am able to take the mean of "random_samp" and "random_samp_zero", but not of "vec_char" and "vec_fac" because the last two are non-numeric or non-logical variables. 
 
 ## Applying the "as.numeric" function to the logical, character, and factor variables:
 ```{r problem_1_conv, eval = FALSE}
@@ -46,9 +46,9 @@ I am able to convert "random_samp_zero" and "vec_fac", but not "vec_char". The f
 ```{r problem_1_mult}
 mult1 = as.numeric(prob1_df[["random_samp_zero"]])*(prob1_df[["random_samp"]])
 
-mult2 = factor(prob1_df[["random_samp_zero"]])*(prob1_df[["random_samp"]])
+mult2 = as.factor(prob1_df[["random_samp_zero"]])*(prob1_df[["random_samp"]])
 
-conv1 = factor(prob1_df[["random_samp_zero"]])
+conv1 = as.factor(prob1_df[["random_samp_zero"]])
 mult = as.numeric(conv1)*(prob1_df[["random_samp"]])
 
 ```
